@@ -1,9 +1,16 @@
-const input = ``;
+const input = {};
 
-const lines = input.split('\n');
+input.puzzle = ``;
+
+input.example = ``;
+
+
+const data = input[process.argv[2]] ? input[process.argv[2]] : input.puzzle;
+
+const lines = data.split('\n');
 
 lines.forEach(line => {
 });
 
 
-console.log(`Part 1: gamma: ${gammaRate}, epsilon: ${epsilonRate}, power: ${gammaRate*epsilonRate}`)
+console.log(`Part 1: ${data}`)
