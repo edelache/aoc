@@ -1,16 +1,19 @@
-const input = {};
+const input = ``;
+const example = ``;
 
-input.puzzle = ``;
+class Aoc20 {
+  constructor (data) {
 
-input.example = ``;
+  }
 
+  solvePart1() {
 
-const data = input[process.argv[2]] ? input[process.argv[2]] : input.puzzle;
+  }
 
-const lines = data.split('\n');
+  solvePart2() {
 
-lines.forEach(line => {
-});
+  }
+}
 
-
-console.log(`Part 1: ${data}`)
+const aoc20 = new Aoc20(example);
+aoc20.solvePart1();
