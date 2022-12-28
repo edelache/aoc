@@ -1,0 +1,24 @@
+{
+  "name": "aoc",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edelache/aoc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edelache/aoc/issues"
+  },
+  "homepage": "https://github.com/edelache/aoc#readme"
+}
