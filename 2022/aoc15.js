@@ -1,5 +1,5 @@
-const Stopwatch = require('../Stopwatch');
-const _ = require('lodash');
+import { Stopwatch } from '../Utils/Stopwatch.js';
+import _ from 'lodash';
 const input = {};
 
 input.puzzle = `Sensor at x=407069, y=1770807: closest beacon is at x=105942, y=2000000
@@ -231,6 +231,7 @@ function DistressFinder(data) {
     for (let r = 0; r < max; r++) {
       const row = {};
       const coords = [];
+      let item;
 
       for (let j = 0; j < items.length; j++) {
         item = items[j];

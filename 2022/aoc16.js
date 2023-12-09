@@ -1,5 +1,4 @@
-const util = require('util');
-const PriorityQueue = require('../PriorityQueue');
+import { PriorityQueue } from '../Utils/PriorityQueue.js';
 
 const input = `Valve OS has flow rate=0; tunnels lead to valves EE, CL
 Valve EN has flow rate=0; tunnels lead to valves CL, GV

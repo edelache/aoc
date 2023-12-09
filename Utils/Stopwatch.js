@@ -11,4 +11,4 @@ function Stopwatch() {
   };
 }
 
-module.exports = Stopwatch;
+export { Stopwatch };

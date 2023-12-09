@@ -1,4 +1,4 @@
-const PriorityQueue = require('./PriorityQueue');
+import { PriorityQueue } from './PriorityQueue.js';
 
 function AStarSearch(yMax, xMax, graph) {
   function heuristic(node) {
@@ -47,4 +47,4 @@ function AStarSearch(yMax, xMax, graph) {
   }
 }
 
-module.exports = AStarSearch;
+export { AStarSearch };

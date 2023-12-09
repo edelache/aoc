@@ -63,4 +63,4 @@ function PriorityQueue() {
   }
 }
 
-module.exports = PriorityQueue;
+export { PriorityQueue };

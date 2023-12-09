@@ -1,5 +1,5 @@
-const Stopwatch = require('../Stopwatch');
-const AStarSearch = require('../AStarSearch');
+import { Stopwatch } from '../Utils/Stopwatch.js';
+import { AStarSearch } from '../Utils/AStarSearch.js';
 
 const input = `abccccccccccccccccccaaaaaaaaacccccccccccccccccccccccccccccccccccccaaaa
 abcccccccccccccccaaaaaaaaaaacccccccccccccccccccccccccccccccccccccaaaaa
