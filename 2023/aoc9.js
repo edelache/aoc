@@ -2,7 +2,6 @@ import { input, test } from './input/aoc9.js';
 
 function diffs(seq, trail=[seq]) {
   const nextSeq = [];
-  let allSame = true;
   let allZero = true;
   let last = null;
   for (let i = 0; i < seq.length-1; i++) {
@@ -11,11 +10,6 @@ function diffs(seq, trail=[seq]) {
       allZero = false;
     }
     nextSeq.push(val);
-    if (last != null) {
-      if (last !== val) {
-        allSame = false;
-      }
-    }
 
     last = val;
   }
