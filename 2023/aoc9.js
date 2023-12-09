@@ -51,7 +51,6 @@ function part1(input) {
 }
 
 function part2(input) {
-  // const nums = input.split('\n').map(line => line.split(' ').map(val => parseInt(val)));
   let sum = 0;
 
   for (let i = 0; i < nums.length; i++) {
