@@ -21,7 +21,6 @@ function parseInput(input) {
           next: null,
           prev: null,
           perimeter: false,
-          verticalPerimiter: false,
           west: false,
           east: false,
           north: false,
@@ -77,21 +76,29 @@ function findNeighbours(node, prev=null) {
   const northNode = grid[node.y-1] ? grid[node.y-1][node.x] : null;
   const southNode = grid[node.y+1] ? grid[node.y+1][node.x] : null;
   const neighbours = [];
+  let hasWest = false;
+  let hasEast = false;
+  let hasNorth = false;
+  let hasSouth = false;
 
   if (westNode && node.west && 'F-L'.indexOf(westNode.tile) !== -1) {
     neighbours.push(westNode);
+    hasWest = true;
   }
 
   if (eastNode && node.east && '7-J'.indexOf(eastNode.tile) !== -1) {
     neighbours.push(eastNode);
+    hasEast = true;
   }
 
   if (northNode && node.north && 'F|7'.indexOf(northNode.tile) !== -1) {
     neighbours.push(northNode);
+    hasNorth = true;
   }
 
   if (southNode && node.south && 'L|J'.indexOf(southNode.tile) !== -1) {
     neighbours.push(southNode);
+    hasSouth = true;
   }
 
   if (prev) {
@@ -100,6 +107,28 @@ function findNeighbours(node, prev=null) {
   } else {
     node.next = neighbours[0];
     node.prev = neighbours[1];
+
+    if (node.tile === 'S') {
+      if (hasSouth && hasEast) {
+        node.tile = 'F';
+        node.glyph = '╔';
+      } else if (hasSouth && hasWest) {
+        node.tile = '7';
+        node.glyph = '╗';
+      } else if (hasSouth && hasNorth) {
+        node.tile = '|';
+        node.glyph = '║';
+      } else if (hasNorth && hasEast) {
+        node.tile = 'L';
+        node.glyph = '╚';
+      } else if (hasNorth && hasWest) {
+        node.tile = 'J';
+        node.glyph = '╝';
+      } else if (hasWest && hasEast) {
+        node.tile = '-';
+        node.glyph = '═';
+      }
+    }
   }
 }
 
@@ -109,7 +138,6 @@ function part1() {
   do {
     const curr = node;
     curr.perimeter = true;
-    curr.verticalPerimiter = ('S|LFJ7'.indexOf(curr.tile) !== '-1') ? true : false;
     node = node.next;
     findNeighbours(node, curr);
     length++;
@@ -124,20 +152,19 @@ const visual = [];
 function part2() {
   let count = 0;
   const floodFill = new FloodFill(grid);
-  // floodFill.fill({ x: 70, y: 73 }, (node) => {
-  //   return !node.counted && !node.perimeter;
-  // }, (node) => {
-  //   count++;
-  //   node.counted = true;
-  //   node.glyph = '*';
-  // });
+  floodFill.fill({ x: 70, y: 73 }, (node) => {
+    return !node.counted && !node.perimeter;
+  }, (node) => {
+    node.counted = true;
+    node.glyph = '*';
+  });
 
-  // floodFill.fill({ x: 0, y: 0 }, (node) => {
-  //   return !node.counted && !node.perimeter;
-  // }, (node) => {
-  //   node.glyph = '#';
-  //   node.counted = true;
-  // });
+  floodFill.fill({ x: 0, y: 0 }, (node) => {
+    return !node.counted && !node.perimeter;
+  }, (node) => {
+    node.glyph = '#';
+    node.counted = true;
+  });
 
   for (let y = 0; y < grid.length; y++) {
     visual[y] = [];
@@ -147,92 +174,49 @@ function part2() {
     }
   }
 
-
-  let unaccounted = 0;
   // determine inner/outer fill the remaining unaccounted (literal) edge cases
   for (let y = 0; y < grid.length; y++) {
     for (let x = 0; x < grid[0].length; x++) {
       const node = grid[y][x];
       if (!node.counted && !node.perimeter) {
         let even = true;
-        let topLeftCornerOpen = false;
-        let topRightCornerOpen = false;
-        let bottomLeftCornerOpen = false;
-        let bottomRightCornerOpen = false;
-
-        function resetCorners() {
-          topLeftCornerOpen = false;
-          topRightCornerOpen = false;
-          bottomLeftCornerOpen = false;
-          bottomRightCornerOpen = false;
-        }
-
+        let topCornerOpen = false;
+        let bottomCornerOpen = false;
         for (let i = x + 1; i < grid[0].length; i++) {
           const next = grid[y][i];
           if (next.perimeter) {
-            if (next.tile === 'F') {
-              if (topLeftCornerOpen) {
-                if (bottomRightCornerOpen) {
-                  even = !even;
-                  resetCorners();
-                } else if (topRightCornerOpen) {
-                  resetCorners();
-                }
+            if (next.tile === 'F' || next.tile === '7') {
+              if (bottomCornerOpen) {
+                even = !even;
+                topCornerOpen = false;
+                bottomCornerOpen = false;
               } else {
-                topLeftCornerOpen = !topLeftCornerOpen;
+                topCornerOpen = !topCornerOpen;
               }
-            } else if (next.tile === '7') {
-              if (topRightCornerOpen) {
-                if (bottomLeftCornerOpen) {
-                  even = !even;
-                  resetCorners();
-                } else if (topLeftCornerOpen) {
-                  resetCorners();
-                }
+            } else if (next.tile === 'L' || next.tile === 'J') {
+              if (topCornerOpen) {
+                even = !even;
+                topCornerOpen = false;
+                bottomCornerOpen = false;
               } else {
-                topRightCornerOpen = true;
-              }
-            } else if (next.tile === 'L') {
-              if (bottomLeftCornerOpen) {
-                if (topRightCornerOpen) {
-                  even = !even;
-                  resetCorners();
-                } else if (bottomRightCornerOpen) {
-                  resetCorners();
-                }
-              } else {
-                bottomLeftCornerOpen = true;
-              }
-            } else if (next.tile === 'J') {
-              if (bottomRightCornerOpen) {
-                if (topLeftCornerOpen) {
-                  even = !even;
-                  resetCorners();
-                } else if (bottomLeftCornerOpen) {
-                  resetCorners();
-                }
-              } else {
-                bottomRightCornerOpen = true;
+                bottomCornerOpen = !bottomCornerOpen;
               }
             } else if (next.tile === '|') {
               even = !even;
-              resetCorners();
+              topCornerOpen = false;
+              bottomCornerOpen = false;
             }
           }
         }
 
-        unaccounted++;
         if (even) {
           visual[y][x] = '#';
         } else {
           visual[y][x] = '*'
-          count++;
         }
       }
     }
   }
-
-  console.log({count, unaccounted});
 
   let node = grid[start.y][start.x];
   let i = 0;
@@ -250,11 +234,17 @@ function part2() {
       }
     }
   }
-  for (let y = 0; y < grid.length; y++) {
-    const utf8str = new String().concat(...visual[y]);
-    console.log(utf8str);
-  }
 
+  for (let y = 0; y < grid.length; y++) {
+    for (let x = 0; x < grid[0].length; x++) {
+      if (visual[y][x] === '*') {
+        count++;
+      }
+    }
+
+    const utf8str = new String().concat(...visual[y]);
+    // console.log(utf8str);
+  }
 
   return count;
 }
